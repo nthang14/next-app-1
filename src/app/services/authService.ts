@@ -1,26 +1,21 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import cookie from "js-cookie";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import baseQuery from "~/app/config/baseQuery";
+
 export const authServiceApi = createApi({
   reducerPath: "authServiceApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "https://accounts.lattehub.com/api",
-    prepareHeaders: (headers: any, { getState }: any) => {
-      const accessToken =
-        getState().auth.accessToken || cookie.get("accessToken");
-      headers.set("Content-Type", "application/json; charset=utf-8");
-      if (accessToken) {
-        headers.set("Authorization", `Bearer ${accessToken}`);
-        headers.set("x-access-token", `${accessToken}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQuery,
   endpoints: (builder) => ({
     authLogin: builder.mutation({
       query: (payload) => ({
         url: "/auth/login",
         method: "POST",
         body: payload,
+      }),
+    }),
+    authLogout: builder.mutation({
+      query: () => ({
+        url: "/auth/logout",
+        method: "DELETE",
       }),
     }),
     getStore: builder.query({
@@ -43,4 +38,5 @@ export const {
   useAuthLoginMutation,
   useGetStoreQuery,
   useCreateStoreMutation,
+  useAuthLogoutMutation,
 } = authServiceApi;
