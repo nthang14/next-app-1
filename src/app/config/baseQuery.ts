@@ -1,4 +1,4 @@
-import { logout } from "~/app/slices/authSlice";
+// import { logout } from "~/app/slices/authSlice";
 import {
   BaseQueryFn,
   FetchArgs,
@@ -9,7 +9,7 @@ import { Mutex } from "async-mutex";
 import axios from "axios";
 import { readAccessToken } from "~/utils/storage";
 import { ErrorProps } from "~/types/globalTypes";
-// import { PATH_API } from "@utils/constants";
+import { METHOD } from "~/utils/constants";
 const PATH_API = "https://accounts.lattehub.com/api";
 // create a new mutex
 const mutex = new Mutex();
@@ -36,30 +36,17 @@ instance.interceptors.request.use(
 );
 
 const callApi = async (args: any) => {
-  if (args.method.toLowerCase() === "get") {
-    return await instance.get(`${PATH_API}${args.url}`, {
-      responseType: "json",
-    });
+  const method = args.method.toLowerCase();
+  switch (method) {
+    case METHOD.post:
+      return await instance.post(`${PATH_API}${args.url}`, args.body);
+    case METHOD.put:
+      return await instance.put(`${PATH_API}${args.url}`, args.body);
+    case METHOD.delete:
+      return await instance.delete(`${PATH_API}${args.url}`);
+    default:
+      return await instance.get(`${PATH_API}${args.url}`);
   }
-  if (args.method.toLowerCase() === "delete") {
-    return await instance.delete(`${PATH_API}${args.url}`, {
-      responseType: "json",
-    });
-  }
-  if (args.method.toLowerCase() === "delete") {
-    return await instance.delete(`${PATH_API}${args.url}`, {
-      responseType: "json",
-    });
-  }
-  if (args.method.toLowerCase() === "put") {
-    return await instance.put(`${PATH_API}${args.url}`, args.body, {
-      responseType: "json",
-    });
-  }
-
-  return await instance.post(`${PATH_API}${args.url}`, args.body, {
-    responseType: "json",
-  });
 };
 
 const baseQuery: BaseQueryFn<

@@ -19,9 +19,8 @@ export default function Login() {
       email: "lappham1408@gmail.com",
       password: "Lappham1408",
     });
-    console.log("result", result);
     dispatch(setAuthState(result?.data));
-    router.push("/store");
+    router.push("/");
   };
   return (
     <>

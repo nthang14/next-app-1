@@ -1,14 +1,13 @@
 import type { ReactElement } from "react";
 import Layout from "~/components/layout";
 import StoreLayout from "~/components/storeLayout";
-import type { NextPageWithLayout } from "~/pages/_app";
 import {
   useGetStoreQuery,
   useCreateStoreMutation,
   useAuthLogoutMutation,
 } from "~/app/services/authService";
 
-const Page: NextPageWithLayout = () => {
+export default function Store() {
   const result = useGetStoreQuery({});
   // const [createStore, { isLoading }] = useCreateStoreMutation();
   const [logout, { isLoading, isSuccess }] = useAuthLogoutMutation();
@@ -24,18 +23,9 @@ const Page: NextPageWithLayout = () => {
   };
   return (
     <div>
-      store
-      <div onClick={handleCreateStore}>Create store</div>
-      <div onClick={handleLogout}>LogOut</div>
+      store Page
+      {/* <div onClick={handleCreateStore}>Create store</div>
+      <div onClick={handleLogout}>LogOut</div> */}
     </div>
   );
-};
-// Page.getLayout = function getLayout(page: ReactElement) {
-//   return (
-//     <Layout>
-//       <StoreLayout>{page}</StoreLayout>
-//     </Layout>
-//   );
-// };
-
-export default Page;
+}

@@ -1,24 +1,25 @@
-import "antd/dist/reset.css";
+import "antd/dist/antd.less";
 import "~/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { store } from "~/app/store";
-import type { ReactElement, ReactNode } from "react";
-import type { NextPage } from "next";
+import { useRouter } from "next/router";
+import AppLayout from "~/components/layout/AppLayout";
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode;
-};
-
-type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
-};
-
-export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page: ReactElement) => page);
-  return getLayout(
+export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const regex =
+    /^(?!.*(?:api|_next\/static|_next\/image|favicon\.ico|404|500|auth)).*/;
+  const arr = router.pathname.split("/");
+  return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      {arr.length > 1 && !regex.test(arr[1]) ? (
+        <Component {...pageProps} />
+      ) : (
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
+      )}
     </Provider>
   );
 }
